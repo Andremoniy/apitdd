@@ -1,0 +1,62 @@
+openapi: 3.0.3
+info:
+  title: Test Driven API Development example
+  description: Test Driven API Development example
+  version: 1.0.0
+
+paths:
+  /api/books:
+    get:
+      tags:
+        - Books API
+      responses:
+        '200':
+          description: A list of Books in the catalogue
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookDto'
+    post:
+      tags:
+        - Books API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookDto'
+      responses:
+        '201':
+          description: The new book item has been added
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookDto'
+
+components:
+  schemas:
+    BookDto:
+      type: object
+      properties:
+        id:
+          type: integer
+
+    CreateBookDto:
+      type: object
+      properties:
+        title:
+          type: string
+        author:
+          type: string
+        isbn:
+          type: string
+        publisher:
+          type: string
+        publicationDate:
+          type: string
+          format: date
+        quantityInStock:
+          type: integer
