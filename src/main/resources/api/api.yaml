@@ -36,27 +36,102 @@ paths:
                 items:
                   $ref: '#/components/schemas/BookDto'
 
+  /api/books/{id}:
+    delete:
+      tags:
+        - Books API
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the book to delete
+      responses:
+        '200':
+          description: The book was deleted
+    get:
+      tags:
+        - Books API
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the book to display
+      responses:
+        '200':
+          description: The requested book details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDetailsDto'
+    patch:
+      tags:
+        - Books API
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the book to update
+      requestBody:
+        description: The updatable part of the book details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBookDetailsDto'
+      responses:
+        '200':
+          description: The updated book details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDetailsDto'
+
 components:
   schemas:
-    BookDto:
+    UpdateBookDetailsDto:
       type: object
       properties:
-        id:
+        quantityInStock:
           type: integer
+
+    BaseBookDto:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/UpdateBookDetailsDto'
+        - properties:
+            title:
+              type: string
+            author:
+              type: string
+
+    BookDto:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BaseBookDto'
+        - properties:
+            id:
+              type: integer
 
     CreateBookDto:
       type: object
-      properties:
-        title:
-          type: string
-        author:
-          type: string
-        isbn:
-          type: string
-        publisher:
-          type: string
-        publicationDate:
-          type: string
-          format: date
-        quantityInStock:
-          type: integer
+      allOf:
+        - $ref: '#/components/schemas/BaseBookDto'
+        - properties:
+            isbn:
+              type: string
+            publisher:
+              type: string
+            publicationDate:
+              type: string
+              format: date
+
+    BookDetailsDto:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BookDto'
+        - $ref: '#/components/schemas/CreateBookDto'
